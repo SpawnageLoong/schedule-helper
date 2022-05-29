@@ -2,7 +2,7 @@ import './index.css'
 import { useState, useEffect } from 'react'
 import { supabase } from './Components/supabaseClient'
 import Auth from './Components/Auth'
-import Account from './Components/Account'
+//import Account from './Components/Account'
 import Todo from './Components/Todo'
 
 function App() {

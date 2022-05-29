@@ -1,4 +1,66 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from './supabaseClient'
+
+const List = ({ session }) => {
+    const [loading, setLoading] = useState(true)
+    const [list, setList] = useState(null)
+  
+    useEffect(() => {
+      getList()
+    }, [session])
+  
+    const getList = async () => {
+      try {
+        setLoading(true)
+        const user = supabase.auth.user()
+  
+        let { data, error, status } = await supabase
+          .from('todo')
+          .select(`list`)
+          .eq('id', user.id)
+          .single()
+  
+        if (error && status !== 406) {
+          throw error
+        }
+  
+        if (data) {
+          setList(data.list)
+        }
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+  
+    const updateList = async (e) => {
+      e.preventDefault()
+  
+      try {
+        setLoading(true)
+        const user = supabase.auth.user()
+  
+        const updates = {
+          id: user.id,
+          list,
+          updated: new Date(),
+        }
+  
+        let { error } = await supabase.from('profiles').upsert(updates, {
+          returning: 'minimal', // Don't return the value after inserting
+        })
+  
+        if (error) {
+          throw error
+        }
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+}
 
 function Todo() {
     const [tasks, setTasks] = useState([]);
@@ -30,7 +92,7 @@ function Todo() {
     }
   
     return (
-      <>
+    <>
         <div>
           <h2>Add Tasks</h2>
           <form onSubmit={handleAddTask}>
@@ -57,6 +119,12 @@ function Todo() {
         ) : (
           <p>No tasks! Go out and touch some grass!</p>
         )}
+      </div>
+
+      <div>
+        <button type="button" className="button block" onClick={() => supabase.auth.signOut()}>
+        Sign Out
+      </button>
       </div>
     </>
   );
@@ -104,8 +172,7 @@ function TaskList(props) {
                     type="checkbox"
                     checked={task.isComplete}
                     onChange={() => handleTaskCompletionToggled(task, index)}
-
-                    />
+                />
               </td>
             </tr>
           ))}
