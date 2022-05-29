@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
+import App from './../App'
 
 const Account = ({ session }) => {
   const [loading, setLoading] = useState(true)
@@ -99,10 +100,19 @@ const Account = ({ session }) => {
           </div>
         </form>
       )}
+      <button type="button" className="button block" onClick={() => returntoApp()}>
+        Return to List
+      </button>
       <button type="button" className="button block" onClick={() => supabase.auth.signOut()}>
         Sign Out
       </button>
     </div>
+  )
+}
+
+function returntoApp() {
+  return (
+      <App />
   )
 }
 

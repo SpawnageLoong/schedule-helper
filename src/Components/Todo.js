@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
+import Account from './Account'
 
 const List = ({ session }) => {
     const [loading, setLoading] = useState(true)
@@ -122,12 +123,22 @@ function Todo() {
       </div>
 
       <div>
+        <button type="button" className="button block" onClick={() => sendtoAccount()}>
+        Profile Settings
+      </button>
+
         <button type="button" className="button block" onClick={() => supabase.auth.signOut()}>
         Sign Out
       </button>
       </div>
     </>
   );
+}
+
+function sendtoAccount() {
+    return (
+        <Account />
+    )
 }
 
 function TaskList(props) {
