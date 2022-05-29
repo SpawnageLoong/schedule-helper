@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from './Components/supabaseClient'
 import Auth from './Components/Auth'
 import Account from './Components/Account'
+import Todo from './Components/Todo'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -17,7 +18,7 @@ function App() {
 
   return (
     <div className="container" style={{ padding: '50px 0 100px 0' }}>
-      {!session ? <Auth /> : <Account key={session.user.id} session={session} />}
+      {!session ? <Auth /> : <Todo />}
     </div>
   )
 }
